@@ -27,9 +27,11 @@ class GoogleCampaignPluginTest extends PHPUnit_Framework_TestCase {
 
 		$mailer->send($message);
 
+		$children = $message->getChildren();
+
 		$this->assertContains(
 			'<a href="http://example.com?utm_campaign=newsletter&amp;utm_source=clippings&amp;utm_medium=email&amp;utm_content=main">Example link</a>',
-			$message->getChildren()[0]->getBody()
+			$children[0]->getBody()
 		);
 	}
 
@@ -65,22 +67,24 @@ class GoogleCampaignPluginTest extends PHPUnit_Framework_TestCase {
 
 		$mailer->send($message);
 
+		$children = $message->getChildren();
+		
 		// generic campaign
 		$this->assertContains(
 			'<a href="http://example.com?utm_campaign=newsletter&amp;utm_source=clippings&amp;utm_medium=email&amp;utm_content=main">Example link</a>',
-			$message->getChildren()[0]->getBody()
+			$children[0]->getBody()
 		);		
 
 		// additional campaign
 		$this->assertContains(
 			'<a href="http://openbuildings.com?utm_campaign=newsletter&amp;utm_source=openbuildings&amp;utm_medium=email&amp;utm_content=share">Openbuildings</a>',
-			$message->getChildren()[0]->getBody()
+			$children[0]->getBody()
 		);
 
 		// custom link
 		$this->assertContains(
 			'<a href="http://clippings.com?utm_campaign=newsletter&amp;utm_source=manual&amp;utm_medium=email">Clippings</a>',
-			$message->getChildren()[0]->getBody()
+			$children[0]->getBody()
 		);
 	}
 
