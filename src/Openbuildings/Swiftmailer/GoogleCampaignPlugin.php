@@ -26,7 +26,7 @@ class GoogleCampaignPlugin implements \Swift_Events_SendListener
 		return $this->_campaign;
 	}
 
-	public function setCampaign($campaign)
+	public function setCampaign(array $campaign)
 	{
 		$this->_campaign = $campaign;
 	}
@@ -36,7 +36,7 @@ class GoogleCampaignPlugin implements \Swift_Events_SendListener
 		return $this->_additional_campaigns;
 	}
 
-	public function setAdditionalCampaigns($campaigns)
+	public function setAdditionalCampaigns(array $campaigns)
 	{
 		$this->_additional_campaigns = $campaigns;
 	}
@@ -142,7 +142,7 @@ class GoogleCampaignPlugin implements \Swift_Events_SendListener
 
 	/**
 	 * Do nothing
-	 *
+	 * @codeCoverageIgnore
 	 * @param Swift_Events_SendEvent $evt
 	 */
 	public function sendPerformed(\Swift_Events_SendEvent $evt)
