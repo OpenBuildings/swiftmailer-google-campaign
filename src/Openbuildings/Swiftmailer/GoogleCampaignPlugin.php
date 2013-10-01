@@ -95,6 +95,7 @@ class GoogleCampaignPlugin implements \Swift_Events_SendListener
 	 */
 	public static function replaceLink($href, $campaign = array(), $additional_campaigns = array())
 	{
+		$href = html_entity_decode($href);
 		$params = array();
 		$parts = explode('?', $href);
 		$uri = $parts[0];
