@@ -51,7 +51,7 @@ class GoogleCampaignPlugin implements \Swift_Events_SendListener
 
 		if ($message->getContentType() === 'text/html') 
 		{
-			$html = GoogleCampaignPlugin::embedCampaigns($message->getBody(), $message->getCharset(), $this->getCampaign(), $this->getAdditionalCampaigns());
+			$html = GoogleCampaignPlugin::embedCampaigns($message->getBody(), $this->getCampaign(), $this->getAdditionalCampaigns(), $message->getCharset());
 			$message->setBody($html);
 		}
 
@@ -59,7 +59,7 @@ class GoogleCampaignPlugin implements \Swift_Events_SendListener
 		{
 			if (strpos($part->getContentType(), 'text/html') !== FALSE)
 			{
-				$html = GoogleCampaignPlugin::embedCampaigns($part->getBody(), $message->getCharset(), $this->getCampaign(), $this->getAdditionalCampaigns());
+				$html = GoogleCampaignPlugin::embedCampaigns($part->getBody(), $this->getCampaign(), $this->getAdditionalCampaigns(), $message->getCharset());
 				$part->setBody($html);
 			}
 		}
@@ -73,7 +73,7 @@ class GoogleCampaignPlugin implements \Swift_Events_SendListener
 	 * @param  array  $additional_campaigns additional campaigns to be replaced
 	 * @return string $html                 html with updated hrefs
 	 */
-	public static function embedCampaigns($html, $encoding = 'UTF-8', $campaign = array(), $additional_campaigns = array())
+	public static function embedCampaigns($html, $campaign = array(), $additional_campaigns = array(), $encoding = 'UTF-8')
 	{
 		// create new DOMDocument
 		$document = new \DOMDocument('1.0', $encoding);

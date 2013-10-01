@@ -174,7 +174,7 @@ HTML;
 
 HTML;
 
-		$converted_html = GoogleCampaignPlugin::embedCampaigns($html, 'UTF-8', array('utm_source' => 'my_source'));
+		$converted_html = GoogleCampaignPlugin::embedCampaigns($html, array('utm_source' => 'my_source'), array(), 'UTF-8');
 
 		$this->assertEquals($expected_html, $converted_html);
 	}
