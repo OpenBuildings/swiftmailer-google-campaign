@@ -75,10 +75,11 @@ class GoogleCampaignPlugin implements \Swift_Events_SendListener
 	 */
 	public static function embedCampaigns($html, $campaign = array(), $additional_campaigns = array(), $encoding = 'UTF-8')
 	{
-		$pattern = '/<a\s[^>]*href=(\"??)([^\" >]*?)\\1[^>]*>(.*)<\/a>/siU';
+		$pattern = '/<a(\s[^>]*)href="([^"]*)"([^>]*)>/si';
 
 		$html = preg_replace_callback($pattern, function($matches) use ($campaign, $additional_campaigns) {
-			return str_replace($matches[2], GoogleCampaignPlugin::replaceLink($matches[2], $campaign, $additional_campaigns), $matches[0]);
+			$href = GoogleCampaignPlugin::replaceLink($matches[2], $campaign, $additional_campaigns);
+			return "<a{$matches[1]}href=\"{$href}\"{$matches[3]}>";
 		}, $html);
 
 		return $html;

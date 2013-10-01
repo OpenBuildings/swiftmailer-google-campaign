@@ -161,13 +161,13 @@ class GoogleCampaignPluginTest extends PHPUnit_Framework_TestCase {
 	public function test_embed_campaigns()
 	{
 		$html = <<<HTML
-<html><head></head><body><a class="some-class" href="http://example.com">Example.com
-and some text</a></body></html>
+<html><head></head><body><a class="some-class" href="http://example.com" data-some-attribute="test">Example.com
+and some text <img src="http://example.com/image.png"/></a></body></html>
 HTML;
 
 		$expected_html = <<<HTML
-<html><head></head><body><a class="some-class" href="http://example.com?utm_source=my_source">Example.com
-and some text</a></body></html>
+<html><head></head><body><a class="some-class" href="http://example.com?utm_source=my_source" data-some-attribute="test">Example.com
+and some text <img src="http://example.com/image.png"/></a></body></html>
 HTML;
 
 		$converted_html = GoogleCampaignPlugin::embedCampaigns($html, array('utm_source' => 'my_source'), array(), 'UTF-8');
