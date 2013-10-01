@@ -132,7 +132,7 @@ class GoogleCampaignPlugin implements \Swift_Events_SendListener
 
 		if (count($params))
 		{
-			$uri .= '?'.http_build_query($params);
+			$uri .= '?'.urldecode(http_build_query($params));
 		}
 
 		$element->setAttribute('href', $uri);
