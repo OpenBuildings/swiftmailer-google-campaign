@@ -75,40 +75,25 @@ class GoogleCampaignPlugin implements \Swift_Events_SendListener
 	 */
 	public static function embedCampaigns($html, $campaign = array(), $additional_campaigns = array(), $encoding = 'UTF-8')
 	{
-		// create new DOMDocument
-		$document = new \DOMDocument('1.0', $encoding);
+		$pattern = '/<a\s[^>]*href=(\"??)([^\" >]*?)\\1[^>]*>(.*)<\/a>/siU';
 
-		// set error level
-		libxml_use_internal_errors(TRUE);
+		$html = preg_replace_callback($pattern, function($matches) use ($campaign, $additional_campaigns) {
+			return str_replace($matches[2], GoogleCampaignPlugin::replaceLink($matches[2], $campaign, $additional_campaigns), $matches[0]);
+		}, $html);
 
-		// load HTML
-		$document->loadHTML($html);
-
-		// create new XPath
-		$xPath = new \DOMXPath($document);
-
-		// search elements
-		$elements = $xPath->query('//a');
-
-		foreach ($elements as $element)
-		{
-			GoogleCampaignPlugin::replaceLink($element, $campaign, $additional_campaigns);
-		}
-
-		return $document->saveHTML();
+		return $html;
 	}
 
 	/**
 	 * Append campaign parameters to the href attribute of $element object
 	 * or replace `google_campaign` parameter with the correct campaign params
-	 * @param  DomNode $element               the anchor element to be replaced
+	 * @param  string  $href                  the href which needs to be replaced
 	 * @param  array   $campaign              the general campaign parameters 
 	 * @param  array   $additional_campaigns  additional campaigns for the newsletter
 	 * @return DomNode the $element with replaced href attribute
 	 */
-	public static function replaceLink(\DomElement $element, $campaign = array(), $additional_campaigns = array())
+	public static function replaceLink($href, $campaign = array(), $additional_campaigns = array())
 	{
-		$href = $element->attributes->getNamedItem('href')->nodeValue;
 		$params = array();
 		$parts = explode('?', $href);
 		$uri = $parts[0];
@@ -135,9 +120,7 @@ class GoogleCampaignPlugin implements \Swift_Events_SendListener
 			$uri .= '?'.urldecode(http_build_query($params));
 		}
 
-		$element->setAttribute('href', $uri);
-
-		return $element;
+		return $uri;
 	}
 
 	/**

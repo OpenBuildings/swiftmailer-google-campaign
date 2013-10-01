@@ -33,7 +33,7 @@ class GoogleCampaignPluginTest extends PHPUnit_Framework_TestCase {
 		$children = $message->getChildren();
 
 		$this->assertContains(
-			'<a href="http://example.com?utm_campaign=newsletter&amp;utm_source=clippings&amp;utm_medium=email&amp;utm_content=main">Example link</a>',
+			'<a href="http://example.com?utm_campaign=newsletter&utm_source=clippings&utm_medium=email&utm_content=main">Example link</a>',
 			$children[0]->getBody()
 		);
 	}
@@ -77,19 +77,19 @@ class GoogleCampaignPluginTest extends PHPUnit_Framework_TestCase {
 
 		// generic campaign
 		$this->assertContains(
-			'<a href="http://example.com?utm_campaign=newsletter&amp;utm_source=clippings&amp;utm_medium=email&amp;utm_content=main">Example link</a>',
+			'<a href="http://example.com?utm_campaign=newsletter&utm_source=clippings&utm_medium=email&utm_content=main">Example link</a>',
 			$children[0]->getBody()
 		);		
 
 		// additional campaign
 		$this->assertContains(
-			'<a href="http://openbuildings.com?utm_campaign=newsletter&amp;utm_source=openbuildings&amp;utm_medium=email&amp;utm_content=share">Openbuildings</a>',
+			'<a href="http://openbuildings.com?utm_campaign=newsletter&utm_source=openbuildings&utm_medium=email&utm_content=share">Openbuildings</a>',
 			$children[0]->getBody()
 		);
 
 		// custom link
 		$this->assertContains(
-			'<a href="http://clippings.com?utm_campaign=newsletter&amp;utm_source=manual&amp;utm_medium=email">Clippings</a>',
+			'<a href="http://clippings.com?utm_campaign=newsletter&utm_source=manual&utm_medium=email">Clippings</a>',
 			$children[0]->getBody()
 		);
 	}
@@ -119,7 +119,7 @@ class GoogleCampaignPluginTest extends PHPUnit_Framework_TestCase {
 
 		// generic campaign
 		$this->assertContains(
-			'<a href="http://example.com?utm_campaign=newsletter&amp;utm_source=clippings&amp;utm_medium=email&amp;utm_content=main">Example link</a>',
+			'<a href="http://example.com?utm_campaign=newsletter&utm_source=clippings&utm_medium=email&utm_content=main">Example link</a>',
 			$message->getBody()
 		);	
 
@@ -130,23 +130,19 @@ class GoogleCampaignPluginTest extends PHPUnit_Framework_TestCase {
 	 */
 	public function test_replace_link()
 	{
-		$dom = new DOMDocument('1.0', 'utf-8');
+		$href = 'http://example.com';
 
-		$dom_element = $dom->createElement('a');
-		$dom_element->setAttribute('href', 'http://example.com');
+		$href = GoogleCampaignPlugin::replaceLink($href, array('utm_source' => 'newsletter', 'utm_campaign' => 'my_campaign'));
 
-		GoogleCampaignPlugin::replaceLink($dom_element, array('utm_source' => 'newsletter', 'utm_campaign' => 'my_campaign'));
+		$this->assertEquals('http://example.com?utm_source=newsletter&utm_campaign=my_campaign', $href);
 
-		$this->assertEquals('http://example.com?utm_source=newsletter&utm_campaign=my_campaign', $dom_element->getAttribute('href'));
+		$href = GoogleCampaignPlugin::replaceLink($href, array('utm_source' => 'newsletter', 'utm_campaign' => 'my_second_campaign'));
 
-		GoogleCampaignPlugin::replaceLink($dom_element, array('utm_source' => 'newsletter', 'utm_campaign' => 'my_second_campaign'));
+		$this->assertEquals('http://example.com?utm_source=newsletter&utm_campaign=my_campaign', $href, 'Should not replace link with existing campaign params');
 
-		$this->assertEquals('http://example.com?utm_source=newsletter&utm_campaign=my_campaign', $dom_element->getAttribute('href'), 'Should not replace link with existing campaign params');
+		$href = 'http://example.com?test_param=test_value&google_campaign=share';
 
-		$dom_element = $dom->createElement('a');
-		$dom_element->setAttribute('href', 'http://example.com?test_param=test_value&google_campaign=share');
-
-		GoogleCampaignPlugin::replaceLink($dom_element, array(
+		$href = GoogleCampaignPlugin::replaceLink($href, array(
 			'utm_source' => 'newsletter', 
 			'utm_campaign' => 'my_general_campaign'
 		), array(
@@ -156,7 +152,7 @@ class GoogleCampaignPluginTest extends PHPUnit_Framework_TestCase {
 			)
 		));		
 
-		$this->assertEquals('http://example.com?test_param=test_value&utm_source=newsletter&utm_campaign=my_share_campaign', $dom_element->getAttribute('href'), 'Should replace link with share campaign');
+		$this->assertEquals('http://example.com?test_param=test_value&utm_source=newsletter&utm_campaign=my_share_campaign', $href, 'Should replace link with share campaign');
 	}
 
 	/**
@@ -165,13 +161,13 @@ class GoogleCampaignPluginTest extends PHPUnit_Framework_TestCase {
 	public function test_embed_campaigns()
 	{
 		$html = <<<HTML
-<html><head></head><body><a href="http://example.com">Example.com</a></body></html>
+<html><head></head><body><a class="some-class" href="http://example.com">Example.com
+and some text</a></body></html>
 HTML;
 
 		$expected_html = <<<HTML
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" "http://www.w3.org/TR/REC-html40/loose.dtd">
-<html><head></head><body><a href="http://example.com?utm_source=my_source">Example.com</a></body></html>
-
+<html><head></head><body><a class="some-class" href="http://example.com?utm_source=my_source">Example.com
+and some text</a></body></html>
 HTML;
 
 		$converted_html = GoogleCampaignPlugin::embedCampaigns($html, array('utm_source' => 'my_source'), array(), 'UTF-8');
