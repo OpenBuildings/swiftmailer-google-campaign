@@ -1,16 +1,24 @@
---- 
 language: php
 
 php:
   - 5.3
+  - 5.4
+
+notifications:
+  email: false
+  slack:
+    secure: R1mGJsr2JUJeUf+BAqNcZr7okImOq8VpKqyKDBAnuF4mZf1gIrcW48H6hqAIalzirqzCd16AKui9JVWtYQ8/NwDWczXVYeLoR26kSN9nGSTLhSf15ozXCAwLQLdW4YTogXGG2in98YKQxEYpUXiX1FEeP8POgsiTPAqn6Br4nvI=
+
+install:
+  - composer selfupdate
+  - composer install --no-interaction
+
+before_script:
+  - mkdir -p build/logs
 
 script:
   - phpunit --coverage-clover build/logs/clover.xml
 
-before_script:
-  - mkdir -p build/logs
-  - composer require --dev satooshi/php-coveralls:dev-master
-  - composer install
-
 after_script:
-  - php vendor/bin/coveralls -v
+  - wget https://scrutinizer-ci.com/ocular.phar
+  - php ocular.phar code-coverage:upload --format=php-clover build/logs/clover.xml
