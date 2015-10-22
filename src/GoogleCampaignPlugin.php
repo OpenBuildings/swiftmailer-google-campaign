@@ -3,6 +3,7 @@
 namespace Openbuildings\Swiftmailer;
 
 use Swift_Events_SendListener;
+use Swift_Events_SendEvent;
 
 /**
  * @author     Yasen Yanev <yasen@openbuildings.com>
@@ -17,7 +18,6 @@ class GoogleCampaignPlugin implements Swift_Events_SendListener
      * Embed campaigns into the newsletter and return the updated html
      *
      * @param  string $html                 the email content
-     * @param  string $encoding             email encoding
      * @param  array  $campaign             the general campaign for the newsletter
      * @param  array  $additionalCampaigns  additional campaigns to be replaced
      * @return string $html                 html with updated hrefs
@@ -25,8 +25,7 @@ class GoogleCampaignPlugin implements Swift_Events_SendListener
     public static function embedCampaigns(
         $html,
         $campaign = [],
-        $additionalCampaigns = [],
-        $encoding = 'UTF-8'
+        $additionalCampaigns = []
     ) {
         $pattern = '/<a(\s[^>]*)href="([^"]*)"([^>]*)>/si';
 
@@ -109,7 +108,7 @@ class GoogleCampaignPlugin implements Swift_Events_SendListener
      *
      * @param Swift_Events_SendEvent $event
      */
-    public function beforeSendPerformed(\Swift_Events_SendEvent $event)
+    public function beforeSendPerformed(Swift_Events_SendEvent $event)
     {
         $message = $event->getMessage();
 
@@ -117,8 +116,7 @@ class GoogleCampaignPlugin implements Swift_Events_SendListener
             $html = GoogleCampaignPlugin::embedCampaigns(
                 $message->getBody(),
                 $this->getCampaign(),
-                $this->getAdditionalCampaigns(),
-                $message->getCharset()
+                $this->getAdditionalCampaigns()
             );
 
             $message->setBody($html);
@@ -129,8 +127,7 @@ class GoogleCampaignPlugin implements Swift_Events_SendListener
                 $html = GoogleCampaignPlugin::embedCampaigns(
                     $part->getBody(),
                     $this->getCampaign(),
-                    $this->getAdditionalCampaigns(),
-                    $message->getCharset()
+                    $this->getAdditionalCampaigns()
                 );
 
                 $part->setBody($html);
@@ -143,7 +140,7 @@ class GoogleCampaignPlugin implements Swift_Events_SendListener
      * @codeCoverageIgnore
      * @param Swift_Events_SendEvent $event
      */
-    public function sendPerformed(\Swift_Events_SendEvent $event)
+    public function sendPerformed(Swift_Events_SendEvent $event)
     {
         // Do Nothing
     }
