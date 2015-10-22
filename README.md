@@ -1,7 +1,8 @@
-# Swiftmailer GoogleCampaign Plugin 
+# Swiftmailer GoogleCampaign Plugin
 
-[![Build Status](https://travis-ci.org/OpenBuildings/swiftmailer-google-campaign.png?branch=master)](https://travis-ci.org/OpenBuildings/swiftmailer-google-campaign)
-[![Coverage Status](https://coveralls.io/repos/OpenBuildings/swiftmailer-google-campaign/badge.png?branch=master)](https://coveralls.io/r/OpenBuildings/swiftmailer-google-campaign?branch=master)
+[![Build Status](https://travis-ci.org/OpenBuildings/swiftmailer-google-campaign.svg?branch=master)](https://travis-ci.org/OpenBuildings/swiftmailer-google-campaign)
+[![Code Coverage](https://scrutinizer-ci.com/g/OpenBuildings/swiftmailer-google-campaign/badges/coverage.png?b=master)](https://scrutinizer-ci.com/g/OpenBuildings/swiftmailer-google-campaign/?branch=master)
+[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/OpenBuildings/swiftmailer-google-campaign/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/OpenBuildings/swiftmailer-google-campaign/?branch=master)
 [![Latest Stable Version](https://poser.pugx.org/openbuildings/swiftmailer-google-campaign/v/stable.png)](https://packagist.org/packages/openbuildings/swiftmailer-google-campaign)
 
 A swiftmailer plugin that appends automatically to all email links google campaign parameters from a config file or a custom one to the links you want
@@ -11,30 +12,30 @@ A swiftmailer plugin that appends automatically to all email links google campai
 ```php
 $mailer = Swift_Mailer::newInstance();
 
-$mailer->registerPLugin(new GoogleCampaignPlugin(array(
-   'utm_source' => 'source', 
-   'utm_campaign' => 'email', 
+$mailer->registerPLugin(new GoogleCampaignPlugin([
+   'utm_source' => 'source',
+   'utm_campaign' => 'email',
    'utm_medium' => 'email'
-));
+]);
 ```
 
 Before sending email the plugin will append to all links the campaign parameters:
 
 ```html
 <html>
-	<body>
-	 <a href="http://example.com">Example.com</a>
-	</body>
+    <body>
+     <a href="http://example.com">Example.com</a>
+    </body>
 </html>
 ```
 
-Will be converted to 
+Will be converted to
 
 ```html
 <html>
-	<body>
-	 <a href="http://example.com?utm_source=source&amp;utm_campaign=email&amp;utm_medium=email">Example.com</a>
-	</body>
+    <body>
+     <a href="http://example.com?utm_source=source&amp;utm_campaign=email&amp;utm_medium=email">Example.com</a>
+    </body>
 </html>
 ```
 
@@ -43,16 +44,20 @@ The plugin supports also embeding additional campaigns to your email:
 ```php
 $mailer = Swift_Mailer::newInstance();
 
-$mailer->registerPLugin(new GoogleCampaignPlugin(array(
-   'utm_source' => 'source', 
-   'utm_campaign' => 'email', 
-   'utm_medium' => 'email'
-  ), array(
-    'your_campaign' => array(
-       'utm_source' => 'my_custom_source', 
-       'utm_campaign' => 'my_custom_campaign'
+$mailer->registerPLugin(
+    new GoogleCampaignPlugin(
+        [
+           'utm_source' => 'source',
+           'utm_campaign' => 'email',
+           'utm_medium' => 'email'
+        ],
+        [
+            'your_campaign' => [
+               'utm_source' => 'my_custom_source',
+               'utm_campaign' => 'my_custom_campaign'
+            ]
+        ]
     )
-  )
 );
 ```
 
@@ -60,9 +65,9 @@ To embed a custom campaign to your email simply add the `google_campaign` query 
 
 ```html
 <html>
-	<body>
-	 <a href="http://example.com?google_campaign=your_campaign">Example.com</a>
-	</body>
+    <body>
+     <a href="http://example.com?google_campaign=your_campaign">Example.com</a>
+    </body>
 </html>
 ```
 
@@ -70,9 +75,9 @@ Will output:
 
 ```html
 <html>
-	<body>
-	 <a href="http://example.com?utm_source=my_custom_source&amp;utm_campaign=my_custom_campaign">Example.com</a>
-	</body>
+    <body>
+     <a href="http://example.com?utm_source=my_custom_source&amp;utm_campaign=my_custom_campaign">Example.com</a>
+    </body>
 </html>
 ```
 

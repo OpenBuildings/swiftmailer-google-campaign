@@ -7,15 +7,23 @@
             "name": "Yasen Yanev",
             "email": "yasen@openbuildings.com",
             "role": "Author"
+        },
+        {
+            "name": "Ivan Kerin",
+            "email": "ikerin@gmail.com",
+            "role": "Maintainer"
         }
     ],
     "require" : {
-        "php": ">=5.3.2"
+        "php": ">=5.4"
     },
     "require-dev" : {
-        "swiftmailer/swiftmailer": "5.0.*"
+        "swiftmailer/swiftmailer": "^5.0"
     },
     "autoload": {
-        "psr-0": {"Openbuildings\\Swiftmailer\\": "src/"}
+        "psr-4": {"Openbuildings\\Swiftmailer\\": "src/"}
+    },
+    "autoload-dev": {
+        "psr-4": {"Openbuildings\\Swiftmailer\\Test\\": "tests/src/"}
     }
 }
