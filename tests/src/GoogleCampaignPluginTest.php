@@ -3,15 +3,15 @@
 namespace Openbuildings\Swiftmailer\GoogleCampaignPlugin\Test;
 
 use Openbuildings\Swiftmailer\GoogleCampaignPlugin;
+use PHPUnit\Framework\TestCase;
 use Swift_Mailer;
 use Swift_NullTransport;
 use Swift_Message;
-use PHPUnit_Framework_TestCase;
 
 /**
- * @coversDefaultClass Openbuildings\Swiftmailer\GoogleCampaignPlugin
+ * @coversDefaultClass \Openbuildings\Swiftmailer\GoogleCampaignPlugin
  */
-class GoogleCampaignPluginTest extends PHPUnit_Framework_TestCase
+class GoogleCampaignPluginTest extends TestCase
 {
     /**
      * @covers ::beforeSendPerformed
